@@ -1,0 +1,32 @@
+name: C++ CI with GTest
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up MSVC (Visual Studio Compiler)
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Configure CMake
+      # 빌드 폴더를 만들고 GTest 등 필요한 설정을 준비합니다.
+      run: cmake -S . -B build
+
+    - name: Build Project
+      # 소스 코드와 테스트 코드를 컴파일합니다.
+      run: cmake --build build
+
+    - name: Run Google Tests
+      # 컴파일된 GTest를 실행하여 결과를 확인합니다.
+      run: |
+        cd build
+        ctest --output-on-failure
