@@ -38,7 +38,7 @@ jobs:
 
     # 3. CMake 설정 및 빌드 (리눅스 표준 방식)
     - name: Configure CMake
-      run: cmake -S . -B build
+      run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
     - name: Build Project
       run: cmake --build build
@@ -51,14 +51,13 @@ jobs:
 
     # 5. SonarCloud Scan (이제 리눅스라 정상 작동합니다)
     - name: SonarCloud Scan
-      if: success() || failure() # 이전 단계가 실패해도 분석은 시도하도록 설정 가능
       uses: SonarSource/sonarcloud-github-action@v2
       with:
         args: >
           -Dsonar.projectKey=hahahanjihun_RobotCleaner
           -Dsonar.organization=hahahanjihun
           -Dsonar.sources=.
-          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.cfamily.compile-commands=build/compile_commands.json
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
