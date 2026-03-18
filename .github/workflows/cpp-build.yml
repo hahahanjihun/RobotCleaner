@@ -8,55 +8,46 @@ on:
 
 jobs:
   build-and-test:
-    # 1. 윈도우 대신 우분투 리눅스를 사용합니다. (SonarCloud 호환성 해결)
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # SonarCloud 분석을 위해 전체 이력이 필요합니다.
+        fetch-depth: 0
 
-    # 2. 리눅스용 빌드 도구 및 분석 도구 설치
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake g++ cppcheck clang-tidy
+        sudo apt-get install -y cmake g++ cppcheck clang-tidy clang-tools
 
-    # cppcheck
-    - name: Run cppcheck
-      continue-on-error: true
-      run: |
-        cppcheck --enable=all --inconclusive --std=c++17 .
-
-    # clang-tidy
-    - name: Run clang-tidy
-      continue-on-error: true
-      run: |
-        # 리눅스 환경에 맞춰 경로 탐색 방식을 변경했습니다.
-        find . -name "*.cpp" -exec clang-tidy {} -- -std=c++17 \;
-
-    # 3. CMake 설정 및 빌드 (리눅스 표준 방식)
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
     - name: Build Project
       run: cmake --build build
 
-    # 4. 테스트 실행
+    - name: Run cppcheck
+      continue-on-error: true
+      run: cppcheck --enable=all --inconclusive --std=c++17 .
+
+    - name: Run clang-tidy
+      continue-on-error: true
+      run: run-clang-tidy -p build
+
     - name: Run Google Tests
       run: |
         cd build
         ctest --output-on-failure
 
-    # 5. SonarCloud Scan (이제 리눅스라 정상 작동합니다)
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2
       with:
         args: >
           -Dsonar.projectKey=hahahanjihun_RobotCleaner
           -Dsonar.organization=hahahanjihun
-          -Dsonar.sources=.
+          -Dsonar.sources=src
+          -Dsonar.tests=tests
           -Dsonar.cfamily.compile-commands=build/compile_commands.json
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
