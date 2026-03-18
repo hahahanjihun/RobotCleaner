@@ -11,48 +11,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake g++ cppcheck clang-tidy clang-tools
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ cppcheck clang-tidy clang-tools unzip curl
 
-    - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-    - name: Build Project
-      run: cmake --build build
+      - name: Build Project
+        run: cmake --build build
 
-    - name: Run cppcheck
-      continue-on-error: true
-      run: cppcheck --enable=all --inconclusive --std=c++17 .
+      - name: Run cppcheck
+        continue-on-error: true
+        run: cppcheck --enable=all --inconclusive --std=c++17 .
 
-    - name: Run clang-tidy
-      continue-on-error: true
-      run: run-clang-tidy -p build
+      - name: Run clang-tidy
+        continue-on-error: true
+        run: run-clang-tidy -p build
 
-    - name: Run Google Tests
-      run: |
-        cd build
-        ctest --output-on-failure
-        
-    - name: Fix paths in compile_commands.json for SonarCloud
-      run: |
-        sed -i 's|/home/runner/work/RobotCleaner/RobotCleaner|/github/workspace|g' build/compile_commands.json
+      - name: Run Google Tests
+        run: |
+          cd build
+          ctest --output-on-failure
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2
-      with:
-        args: >
-          -Dsonar.projectKey=hahahanjihun_RobotCleaner
-          -Dsonar.organization=hahahanjihun
-          -Dsonar.sources=src
-          -Dsonar.tests=tests
-          -Dsonar.cfamily.compile-commands=build/compile_commands.json
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarCloud Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 1. Sonar-Scanner CLI 설치
+          export SCANNER_VERSION=6.2.1.4610
+          export SCANNER_HOME=$HOME/.sonar/sonar-scanner-${SCANNER_VERSION}-linux-x64
+          
+          mkdir -p $HOME/.sonar
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux-x64.zip
+          unzip -o sonar-scanner.zip -d $HOME/.sonar/
+          
+          # 2. 분석 실행
+          $SCANNER_HOME/bin/sonar-scanner \
+            -Dsonar.projectKey=hahahanjihun_RobotCleaner \
+            -Dsonar.organization=hahahanjihun \
+            -Dsonar.sources=src \
+            -Dsonar.tests=tests \
+            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
+            -Dsonar.host.url=https://sonarcloud.io
