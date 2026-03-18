@@ -14,19 +14,43 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up MSVC (Visual Studio Compiler)
+    - name: Set up MSVC
       uses: microsoft/setup-msbuild@v2
 
+    # cppcheck
+    - name: Run cppcheck
+      run: |
+        choco install cppcheck -y
+        cppcheck --enable=all --inconclusive --std=c++17 .
+
+    # clang-tidy
+    - name: Run clang-tidy
+      continue-on-error: true
+      run: |
+        choco install llvm -y
+        Get-ChildItem -Recurse -Filter *.cpp | ForEach-Object {
+          clang-tidy $_.FullName -- -std=c++17
+        }
+
     - name: Configure CMake
-      # 빌드 폴더를 만들고 GTest 등 필요한 설정을 준비합니다.
       run: cmake -S . -B build
 
     - name: Build Project
-      # 소스 코드와 테스트 코드를 컴파일합니다.
       run: cmake --build build
 
     - name: Run Google Tests
-      # 컴파일된 GTest를 실행하여 결과를 확인합니다.
       run: |
         cd build
         ctest --output-on-failure
+
+    # SonarCloud
+    - name: SonarCloud Scan
+      continue-on-error: true
+      uses: SonarSource/sonarcloud-github-action@v2
+      with:
+        args: >
+          -Dsonar.projectKey=hahahanjihun_RobotCleaner
+          -Dsonar.organization=hahahanjihun
+          -Dsonar.sources=.
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
