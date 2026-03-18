@@ -39,6 +39,10 @@ jobs:
       run: |
         cd build
         ctest --output-on-failure
+        
+    - name: Fix paths in compile_commands.json for SonarCloud
+      run: |
+        sed -i 's|/home/runner/work/RobotCleaner/RobotCleaner|/github/workspace|g' build/compile_commands.json
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v2
