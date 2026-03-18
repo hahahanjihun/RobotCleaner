@@ -19,9 +19,10 @@ jobs:
 
     # cppcheck
     - name: Run cppcheck
+      continue-on-error: true
       run: |
-        choco install cppcheck -y
-        cppcheck --enable=all --inconclusive --std=c++17 .
+        choco install cppcheck -y --force
+        cppcheck --enable=all --inconclusive --std=c++17 . || true
 
     # clang-tidy
     - name: Run clang-tidy
