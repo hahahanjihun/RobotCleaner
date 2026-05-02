@@ -1,7 +1,8 @@
 #pragma once
+#include <cstdint>
 
 // 시스템의 현재 동작 상태 (System State)
-enum class SystemState { 
+enum class SystemState: std::uint8_t { 
     IDLE,       // 대기 상태
     CLEANING,   // 청소 중
     AVOIDING,   // 회피 중
@@ -9,7 +10,7 @@ enum class SystemState {
 };
 
 // 모터의 구동 설정 (Drive Setting)
-enum class DriveSetting { 
+enum class DriveSetting: std::uint8_t { 
     STOPPED,    // 정지
     FORWARD,    // 전진
     BACKWARD,   // 후진
@@ -18,7 +19,7 @@ enum class DriveSetting {
 };
 
 // 흡입기 전원 설정 (Power Setting)
-enum class PowerSetting { 
+enum class PowerSetting: std::uint8_t { 
     OFF,        // 꺼짐
     NORMAL,     // 일반 모드
     BOOST       // 강력 모드

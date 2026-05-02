@@ -2,7 +2,7 @@
 #include <iostream>
 
 // 초기 상태: 정지
-MotorHandler::MotorHandler() : status(DriveSetting::STOPPED) {}
+MotorHandler::MotorHandler() = default;
 
 void MotorHandler::moveForward() {
     status = DriveSetting::FORWARD;

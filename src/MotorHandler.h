@@ -4,7 +4,7 @@
 // 구동 모터 제어 핸들러
 class MotorHandler {
 private:
-    DriveSetting status; // 현재 모터 상태
+    DriveSetting status = DriveSetting::STOPPED; // 현재 모터 상태
 
 public:
     MotorHandler();

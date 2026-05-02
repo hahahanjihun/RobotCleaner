@@ -10,10 +10,8 @@ class CleanerHandlerTest : public ::testing::Test {
 protected:
     CleanerHandler cleaner;
 
-    // [추가] 부모 클래스(프렌드)가 자식(테스트 코드)을 위해 비공개 멤버를 반환해줌
-    PowerSetting getPowerLevel() { 
-        return cleaner.powerLevel; 
-    }
+    // 부모 클래스(CleanerHandlerTest)가 자식(테스트 코드)을 위해 비공개 멤버를 반환해줌
+    auto getPowerLevel() -> PowerSetting { return cleaner.powerLevel; }
 };
 
 // 1. 청소기 가동 및 중지 테스트

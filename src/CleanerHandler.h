@@ -4,7 +4,7 @@
 // 먼지 흡입 모터 제어 핸들러
 class CleanerHandler {
 private:
-    PowerSetting powerLevel; // 현재 흡입 모터 세기 
+    PowerSetting powerLevel = PowerSetting::OFF; // 현재 흡입 모터 세기 
 
 public:
     CleanerHandler();
