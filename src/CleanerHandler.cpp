@@ -2,7 +2,7 @@
 #include <iostream>
 
 // 초기 상태: 꺼짐
-CleanerHandler::CleanerHandler() = default;
+CleanerHandler::CleanerHandler() {};
 
 void CleanerHandler::activateCleaner() {
     powerLevel = PowerSetting::NORMAL;
