@@ -45,6 +45,7 @@ jobs:
         run: |
           # build 폴더 내의 모든 오브젝트 파일(.o)에 대해 gcov 실행
           # -p: 파일 경로 보존, -l: 긴 파일명 사용
+          cd build
           find build -name "*.o" -exec gcov -p -l {} +
 
       - name: SonarCloud Scan
