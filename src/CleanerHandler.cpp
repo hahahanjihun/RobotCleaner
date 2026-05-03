@@ -22,3 +22,7 @@ void CleanerHandler::normalizePower() {
     powerLevel = PowerSetting::NORMAL;
     std::cout << "[Cleaner] 일반 모드 복구\n";
 }
+
+PowerSetting CleanerHandler::getPowerLevel() const {
+    return powerLevel; // gtest용
+}

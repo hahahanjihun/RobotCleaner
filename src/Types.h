@@ -26,7 +26,7 @@ enum class PowerSetting {
 
 // 전/좌/우 방향의 장애물 감지 여부 (Position)
 struct Position {
-    bool isFrontBlocked; // 전방 장애물 유무 (true: 있음, false: 없음)
-    bool isLeftBlocked;  // 좌측 장애물 유무
-    bool isRightBlocked; // 우측 장애물 유무
+    bool isFrontBlocked = false; // 전방 장애물 유무 (true: 있음, false: 없음)
+    bool isLeftBlocked = false;  // 좌측 장애물 유무
+    bool isRightBlocked = false; // 우측 장애물 유무
 };

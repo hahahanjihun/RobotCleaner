@@ -28,3 +28,7 @@ void MotorHandler::stopMotor() {
     status = DriveSetting::STOPPED;
     std::cout << "[Motor] 정지\n";
 }
+
+DriveSetting MotorHandler::getStatus() const{
+    return status;
+}
