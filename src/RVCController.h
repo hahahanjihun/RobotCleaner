@@ -18,5 +18,6 @@ public:
     void resumeNormalCleaning(); // 집중 청소 종료 후 청소 재개 (UC-03)
     
     void changeState(SystemState newState); // 서브 컨트롤러의 상태 동기화용 메서드
+    
     SystemState getSystemState() const;           // GTest에서 상태 검증을 위한 Getter
 };

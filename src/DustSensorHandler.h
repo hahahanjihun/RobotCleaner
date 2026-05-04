@@ -9,6 +9,6 @@ private:
     DustController* dustController; // 데이터를 전달할 두뇌 포인터
 
 public:
-    DustSensorHandler(DustController* dc);
+    explicit DustSensorHandler(DustController* dc);
     void notifyDust(float level); // 새로운 먼지량 감지 알림
 };
