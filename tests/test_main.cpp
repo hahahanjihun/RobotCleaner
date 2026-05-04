@@ -23,10 +23,10 @@ protected:
 
     RVCIntegrationTest() 
         : rvc(&cleaner, &motor), 
-          actionCtrl(&motor, &cleaner, &rvc), 
-          dustCtrl(&cleaner, &rvc),
-          obstacleSensor(&actionCtrl),
-          dustSensor(&dustCtrl) {}
+        actionCtrl(&motor, &cleaner, &rvc), 
+        dustCtrl(&cleaner, &rvc),
+        obstacleSensor(&actionCtrl),
+        dustSensor(&dustCtrl) {}
 };
 
 // ==========================================
@@ -37,12 +37,12 @@ TEST_F(RVCIntegrationTest, UC00_UC01_EvadeLeftScenario) {
 
     Position fakeObstacle;
     fakeObstacle.isFrontBlocked = true;
-    fakeObstacle.isLeftBlocked = false; 
+    fakeObstacle.isLeftBlocked = false;
     fakeObstacle.isRightBlocked = true;
 
     obstacleSensor.notifyFrontObstacle(fakeObstacle);
 
-    EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING); 
+    EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
 }
 
 // ==========================================
@@ -54,7 +54,6 @@ TEST_F(RVCIntegrationTest, UC02_EvadeBackwardLoopScenario) {
     Position trappedPos = {true, true, true};
     obstacleSensor.notifyFrontObstacle(trappedPos);
 
-   
     EXPECT_EQ(rvc.getSystemState(), SystemState::AVOIDING);
 
     Position stillTrappedPos = {false, true, true};
@@ -73,7 +72,6 @@ TEST_F(RVCIntegrationTest, UC03_DustFocusCleaningScenario) {
     rvc.startCleaning();
 
     dustSensor.notifyDust(80.5f);
-
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
 }
