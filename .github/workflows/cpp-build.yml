@@ -1,4 +1,4 @@
-name: C++ CI with GTest
+name: C++ CI with System Test
 
 on:
   push:
@@ -6,27 +6,35 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+permissions:
+  contents: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. 코드 가져오기
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # 2. 의존성 설치
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ cppcheck clang-tidy clang-tools unzip curl
+          sudo apt-get install -y cmake g++ cppcheck clang-tidy clang-tools unzip curl python3
 
+      # 3. CMake 설정
       - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
+      # 4. 빌드
       - name: Build Project
         run: cmake --build build
 
+      # 5. 정적 분석
       - name: Run cppcheck
         continue-on-error: true
         run: cppcheck --enable=all --inconclusive --std=c++17 .
@@ -35,38 +43,57 @@ jobs:
         continue-on-error: true
         run: run-clang-tidy -p build
 
-      - name: Run Google Tests
-        run: |
-          cd build
-          ctest --output-on-failure
+      # 🚨 GTest 제거됨 🚨
 
-      # [추가] 4. gcov 실행하여 .gcov 파일들 추출
-      - name: Generate gcov files
+      # 6. 시스템 테스트 빌드
+      - name: Build System Test
         run: |
-          # build 폴더 내의 모든 오브젝트 파일(.o)에 대해 gcov 실행
-          # -p: 파일 경로 보존, -l: 긴 파일명 사용
-          cd build
-          find . -name "*.o" -exec gcov -p -l {} + 
+          g++ -std=c++17 tests/system_test.cpp -o system_test
 
+      # 7. 시스템 테스트 실행
+      - name: Run System Test
+        run: |
+          ./system_test
+
+      # 8. HTML 리포트 생성
+      - name: Generate HTML Report
+        run: |
+          python3 scripts/generate_report.py
+
+      # 9. 결과 파일 업로드 (Artifacts)
+      - name: Upload System Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-test-report
+          path: |
+            test_result.json
+            reports/report.html
+
+      # 10. GitHub Pages 배포 (main 브랜치만)
+      - name: Deploy report to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
+
+      # 11. SonarCloud 분석
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # 1. Sonar-Scanner CLI 설치
           export SCANNER_VERSION=6.2.1.4610
           export SCANNER_HOME=$HOME/.sonar/sonar-scanner-${SCANNER_VERSION}-linux-x64
-          
+
           mkdir -p $HOME/.sonar
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux-x64.zip
           unzip -o sonar-scanner.zip -d $HOME/.sonar/
-          
-          # 2. 분석 실행
+
           $SCANNER_HOME/bin/sonar-scanner \
             -Dsonar.projectKey=hahahanjihun_RobotCleaner \
             -Dsonar.organization=hahahanjihun \
             -Dsonar.sources=src \
             -Dsonar.tests=tests \
             -Dsonar.cfamily.compile-commands=build/compile_commands.json \
-            -Dsonar.cfamily.gcov.reportsPath=build \
             -Dsonar.host.url=https://sonarcloud.io

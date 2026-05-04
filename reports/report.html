@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RobotCleaner System Test Report</title>
+<style>
+body { font-family: Arial; background:#f5f6fa; margin:40px; }
+.card { background:white; padding:24px; border-radius:12px; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { border:1px solid #ddd; padding:12px; }
+th { background:#2f3542; color:white; }
+.summary { display:flex; gap:12px; }
+.box { background:#f1f2f6; padding:16px; border-radius:8px; flex:1; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>RobotCleaner System Test Report</h1>
+
+<div class="summary">
+<div class="box"><h3>Total</h3><p>3</p></div>
+<div class="box"><h3>PASS</h3><p>3</p></div>
+<div class="box"><h3>FAIL</h3><p>0</p></div>
+<div class="box"><h3>Success Rate</h3><p>100.0%</p></div>
+</div>
+
+<table>
+<tr>
+<th>TC ID</th>
+<th>Test Case</th>
+<th>Result</th>
+</tr>
+
+    <tr style="background:#d4edda">
+        <td>TC-01</td>
+        <td>전방 장애물 감지 후 좌측 회피</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-02</td>
+        <td>3면 장애물 감지 후 후진</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-03</td>
+        <td>먼지 감지 후 청소 상태 유지</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+</table>
+</div>
+</body>
+</html>

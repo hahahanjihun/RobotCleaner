@@ -97,3 +97,5 @@ enable_testing()
 # 'ctest' 명령어로 모든 테스트를 한 번에 실행 가능함
 add_test(NAME MyRobotSystemTest COMMAND robot_tests)
 
+add_executable(system_test tests/system_test.cpp)
+
