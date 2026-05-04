@@ -16,6 +16,6 @@ public:
     void turnRight();    // 우회전
     void stopMotor();    // 정지
 
-    // 유닛 테스트(GTest)에서 상태 검증을 위한 프렌드 선언
-    friend class MotorHandlerTest; 
+     // GTest에서 상태 검증을 위한 Getter
+    DriveSetting getStatus() const;    
 };

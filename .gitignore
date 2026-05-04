@@ -40,6 +40,12 @@
 
 # debug information files
 *.dwo
+
+# Coverage files
+*.gcno
+*.gcda
+*.gcov
+build/
 =======
 # Visual Studio 관련
 .vs/

@@ -1,3 +1,9 @@
+# ---------------------------------------------------------
+# [강제 설정] 모든 타겟에 커버리지 옵션 적용
+# ---------------------------------------------------------
+# 맥(Clang)과 리눅스(GCC) 공용 옵션이야.
+add_compile_options(--coverage)
+add_link_options(--coverage)
 # -----------------------------------------------------------------------------
 # 1. 기초 설정 (Basic Settings)
 # -----------------------------------------------------------------------------
@@ -58,6 +64,11 @@ FetchContent_MakeAvailable(googletest)
 add_library(RobotLogic
     src/CleanerHandler.cpp
     src/MotorHandler.cpp
+    src/RVCController.cpp
+    src/ActionController.cpp
+    src/DustController.cpp
+    src/ObstacleSensorHandler.cpp
+    src/DustSensorHandler.cpp
 )
 
 # RobotLogic을 사용하는 모든 타겟(app, robot_tests)이 
@@ -71,10 +82,7 @@ target_link_libraries(app RobotLogic) # 핵심 로직 연결
 # [C] robot_tests: 단위 테스트(Unit Test)를 수행하는 실행 파일
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
-
-    tests/CleanerHandlerTest.cpp 
-    tests/MotorHandlerTest.cpp
-    #이 위치에 tests/xxx 이런 식으로 추가해주면 됨
+    tests/test_main.cpp 
 )
 # GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
 target_link_libraries(robot_tests 
@@ -88,3 +96,4 @@ target_link_libraries(robot_tests
 enable_testing()
 # 'ctest' 명령어로 모든 테스트를 한 번에 실행 가능함
 add_test(NAME MyRobotSystemTest COMMAND robot_tests)
+

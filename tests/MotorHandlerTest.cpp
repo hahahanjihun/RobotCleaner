@@ -1,1 +1,0 @@
-// gtest의 FRIEND_TEST 사용

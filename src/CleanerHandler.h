@@ -15,6 +15,6 @@ public:
     void boostPower();        // 강력 모드로 변경
     void normalizePower();    // 일반 모드로 복구
 
-    // 유닛 테스트(GTest)에서 상태 검증을 위한 프렌드 선언
-    friend class CleanerHandlerTest;
+     // GTest에서 상태 검증을 위한 Getter
+    PowerSetting getPowerLevel() const;          
 };
