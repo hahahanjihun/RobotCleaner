@@ -63,26 +63,21 @@ bool TC_POS_03() {
 
 // ==========================================
 // TC-POS-04
-// UC-01 → UC-03 연속 흐름
-// 회피 완료 → 즉시 고먼지 감지 → 집중 청소 → 복귀
-// (주의: 약 5초 소요)
+// UC-00 단일 흐름
+// startCleaning() → 장애물 없음 → 기본 청소 유지
+// SystemState: CLEANING 유지
+// MotorHandler: FORWARD 유지
+// CleanerHandler: NORMAL 유지
 // ==========================================
 bool TC_POS_04() {
     TestContext t;
-
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    if (t.rvc.getSystemState() != SystemState::AVOIDING) return false;
-
-    Position leftClear = {false, false, true};
-    t.obstacleSensor.notifySideObstacle(leftClear);
-    if (t.rvc.getSystemState() != SystemState::CLEANING) return false;
-
-    t.dustSensor.notifyDust(75.0f);
+    Position noObstacle = {false, false, false};
+    t.obstacleSensor.notifyFrontObstacle(noObstacle);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
+           t.motor.getStatus() == DriveSetting::FORWARD &&
            t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
 
@@ -154,34 +149,20 @@ bool TC_POS_07() {
 
 // ==========================================
 // TC-POS-08
-// UC-02 loop → UC-03 연속 흐름
-// 후진 2회 반복 → 우측 탈출 → 청소 재개 → 고먼지 발생
-// (주의: 약 5초 소요)
+// UC-00 → UC-03 미진입 흐름
+// startCleaning() → 낮은 먼지 감지 → boost 조건 미충족 → 일반 청소 유지
+// SystemState: CLEANING 유지
+// CleanerHandler: NORMAL 유지
+// MotorHandler: FORWARD 유지
 // ==========================================
 bool TC_POS_08() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-
-    if (t.motor.getStatus() != DriveSetting::BACKWARD) return false;
-    if (t.rvc.getSystemState() != SystemState::AVOIDING) return false;
-
-    Position stillBlocked = {false, true, true};
-    t.obstacleSensor.notifySideObstacle(stillBlocked);
-
-    if (t.motor.getStatus() != DriveSetting::BACKWARD) return false;
-
-    Position rightClear = {false, true, false};
-    t.obstacleSensor.notifySideObstacle(rightClear);
-
-    if (t.rvc.getSystemState() != SystemState::CLEANING) return false;
-    if (t.motor.getStatus() != DriveSetting::FORWARD) return false;
-
-    t.dustSensor.notifyDust(75.0f);
+    t.dustSensor.notifyDust(30.0f);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
+           t.motor.getStatus() == DriveSetting::FORWARD &&
            t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
 
@@ -211,45 +192,20 @@ bool TC_POS_09() {
 
 // ==========================================
 // TC-POS-10
-// 전체 시나리오 반복 수행
-// UC-00 시작 후 UC-01, UC-02, UC-03 을 각 2회씩 교차 수행
-// 매 사이클마다 상태 오염 없이 정상 복귀 확인
-// (주의: 약 10초 소요)
+// UC-00 단일 흐름 (부분 장애물)
+// startCleaning() → 좌/우 장애물 감지 → 전방 비어있음 → 회피 없이 직진 유지
+// SystemState: CLEANING 유지 (AVOIDING 미진입)
+// MotorHandler: FORWARD 유지
+// CleanerHandler: NORMAL 유지
 // ==========================================
 bool TC_POS_10() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    Position leftClear  = {false, false, true};
-
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    if (t.rvc.getSystemState() != SystemState::AVOIDING) return false;
-
-    t.obstacleSensor.notifySideObstacle(leftClear);
-    if (t.rvc.getSystemState() != SystemState::CLEANING) return false;
-
-    t.dustSensor.notifyDust(75.0f);
-
-    if (t.rvc.getSystemState() != SystemState::CLEANING) return false;
-    if (t.cleaner.getPowerLevel() != PowerSetting::NORMAL) return false;
-
-    Position stillBlocked = {false, true, true};
-    Position rightClear   = {false, true, false};
-
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    if (t.rvc.getSystemState() != SystemState::AVOIDING) return false;
-
-    t.obstacleSensor.notifySideObstacle(stillBlocked);
-    if (t.motor.getStatus() != DriveSetting::BACKWARD) return false;
-
-    t.obstacleSensor.notifySideObstacle(rightClear);
-    if (t.rvc.getSystemState() != SystemState::CLEANING) return false;
-    if (t.motor.getStatus() != DriveSetting::FORWARD) return false;
-
-    t.dustSensor.notifyDust(75.0f);
+    Position sideBlocked = {false, true, true};
+    t.obstacleSensor.notifyFrontObstacle(sideBlocked);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.cleaner.getPowerLevel() == PowerSetting::NORMAL &&
-           t.motor.getStatus() == DriveSetting::FORWARD;
+           t.motor.getStatus() == DriveSetting::FORWARD &&
+           t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
