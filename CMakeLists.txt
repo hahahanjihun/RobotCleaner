@@ -89,7 +89,6 @@ add_executable(robot_tests
 # GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
 target_link_libraries(robot_tests 
     RobotLogic 
-    gtest_main
 )
 
 # -----------------------------------------------------------------------------
@@ -101,5 +100,12 @@ enable_testing()
 add_test(NAME MyRobotSystemTest COMMAND robot_tests)
 
 # System Test HTML Report용 실행 파일
-add_executable(system_test tests/system_test.cpp)
-target_link_libraries(system_test RobotLogic)
+add_executable(system_test
+    tests/system_test.cpp
+    tests/test_positive.cpp
+    tests/test_negative.cpp
+)
+
+target_link_libraries(system_test
+    RobotLogic
+)

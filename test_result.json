@@ -1,17 +1,182 @@
 [
   {
-    "id": "TC-01",
-    "name": "전방 장애물 감지 후 좌측 회피",
+    "id": "TC-POS-01",
+    "type": "Positive",
+    "name": "UC-00 -> UC-01 좌측 회피 전체 흐름",
     "result": "PASS"
   },
   {
-    "id": "TC-02",
-    "name": "3면 장애물 감지 후 후진",
+    "id": "TC-POS-02",
+    "type": "Positive",
+    "name": "UC-00 -> UC-03 고먼지 집중 청소",
     "result": "PASS"
   },
   {
-    "id": "TC-03",
-    "name": "먼지 감지 후 청소 상태 유지",
+    "id": "TC-POS-03",
+    "type": "Positive",
+    "name": "UC-00 -> UC-01 -> UC-02 모터 시퀀스",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-POS-04",
+    "type": "Positive",
+    "name": "UC-01 -> UC-03 회피 후 집중 청소",
+    "result": "FAIL"
+  },
+  {
+    "id": "TC-POS-05",
+    "type": "Positive",
+    "name": "UC-03 -> UC-01 집중 청소 후 회피",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-POS-06",
+    "type": "Positive",
+    "name": "2회 연속 전방 장애물 회피",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-POS-07",
+    "type": "Positive",
+    "name": "UC-03 2회 연속 집중 청소",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-POS-08",
+    "type": "Positive",
+    "name": "UC-02 loop -> UC-03 연속 흐름",
+    "result": "FAIL"
+  },
+  {
+    "id": "TC-POS-09",
+    "type": "Positive",
+    "name": "UC-00 -> UC-03 -> UC-01 -> UC-02 전체 순차 수행",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-POS-10",
+    "type": "Positive",
+    "name": "전체 시나리오 2회 반복 수행",
+    "result": "FAIL"
+  },
+  {
+    "id": "TC-NEG-01",
+    "type": "Negative",
+    "name": "CLEANING 중 startCleaning 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-02",
+    "type": "Negative",
+    "name": "CLEANING 중 resumeCleaning 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-03",
+    "type": "Negative",
+    "name": "유효하지 않은 SystemState 변경 시도",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-04",
+    "type": "Negative",
+    "name": "AVOIDING 중 startCleaning 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-05",
+    "type": "Negative",
+    "name": "동일한 상태로 changeState 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-06",
+    "type": "Negative",
+    "name": "비정상 Position 데이터 입력",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-07",
+    "type": "Negative",
+    "name": "회피 중 전방 장애물 재발생",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-08",
+    "type": "Negative",
+    "name": "FORWARD 상태에서 moveForward 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-09",
+    "type": "Negative",
+    "name": "BACKWARD 상태에서 moveBackward 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-10",
+    "type": "Negative",
+    "name": "LEFT 상태에서 turnLeft 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-11",
+    "type": "Negative",
+    "name": "RIGHT 상태에서 turnRight 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-12",
+    "type": "Negative",
+    "name": "STOPPED 상태에서 stopMotor 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-13",
+    "type": "Negative",
+    "name": "음수 DustLevel 입력",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-14",
+    "type": "Negative",
+    "name": "매우 큰 DustLevel 입력",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-15",
+    "type": "Negative",
+    "name": "OFF 상태에서 deactivateCleaner 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-16",
+    "type": "Negative",
+    "name": "NORMAL 상태에서 activateCleaner 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-17",
+    "type": "Negative",
+    "name": "BOOST 상태에서 boostPower 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-18",
+    "type": "Negative",
+    "name": "NORMAL 상태에서 normalizePower 중복 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-19",
+    "type": "Negative",
+    "name": "OFF 상태에서 normalizePower 호출",
+    "result": "PASS"
+  },
+  {
+    "id": "TC-NEG-20",
+    "type": "Negative",
+    "name": "OFF 상태에서 boostPower 호출",
     "result": "PASS"
   }
 ]

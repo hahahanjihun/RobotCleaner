@@ -43,7 +43,11 @@ jobs:
         continue-on-error: true
         run: run-clang-tidy -p build
 
-      # 🚨 GTest 제거됨 🚨
+      # GTest 
+      - name: Run Google Tests
+        run: |
+          cd build
+          ctest --output-on-failure
 
       # 6. 시스템 테스트 빌드
       - name: Build System Test
