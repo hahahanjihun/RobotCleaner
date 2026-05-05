@@ -58,7 +58,7 @@ jobs:
       # 7. 시스템 테스트 실행
       - name: Run System Test
         run: |
-          ./system_test
+          ./build/system_test
 
       # 8. HTML 리포트 생성
       - name: Generate HTML Report
