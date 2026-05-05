@@ -63,22 +63,25 @@ bool TC_POS_03() {
 
 // ==========================================
 // TC-POS-04
-// UC-00 단일 흐름
-// startCleaning() → 장애물 없음 → 기본 청소 유지
-// SystemState: CLEANING 유지
-// MotorHandler: FORWARD 유지
-// CleanerHandler: NORMAL 유지
+// UC-00 → UC-01 → UC-02 연속 흐름
+// startCleaning() → 전방 장애물 → 후진 → 좌측 막힘 확인 → 우측 탈출
+// MotorHandler: FORWARD → BACKWARD → RIGHT → FORWARD
+// SystemState: CLEANING → AVOIDING → CLEANING
 // ==========================================
 bool TC_POS_04() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position noObstacle = {false, false, false};
-    t.obstacleSensor.notifyFrontObstacle(noObstacle);
+    // 1. 전방/좌측/우측 모두 막힘 → 후진
+    Position allBlocked = {true, true, true};
+    t.obstacleSensor.notifyFrontObstacle(allBlocked);
 
-    return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.motor.getStatus() == DriveSetting::FORWARD &&
-           t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
+    // 2. 후진 중 좌측은 막혀 있고, 우측은 비어 있음 → 우측 탈출
+    Position rightClear = {false, true, false};
+    t.obstacleSensor.notifySideObstacle(rightClear);
+
+    return t.motor.getStatus() == DriveSetting::FORWARD &&
+           t.rvc.getSystemState() == SystemState::CLEANING;
 }
 
 // ==========================================

@@ -21,7 +21,7 @@
     "id": "TC-POS-04",
     "type": "Positive",
     "name": "UC-01 -> UC-03 회피 후 집중 청소",
-    "result": "FAIL"
+    "result": "PASS"
   },
   {
     "id": "TC-POS-05",
@@ -45,7 +45,7 @@
     "id": "TC-POS-08",
     "type": "Positive",
     "name": "UC-02 loop -> UC-03 연속 흐름",
-    "result": "FAIL"
+    "result": "PASS"
   },
   {
     "id": "TC-POS-09",
@@ -57,7 +57,7 @@
     "id": "TC-POS-10",
     "type": "Positive",
     "name": "전체 시나리오 2회 반복 수행",
-    "result": "FAIL"
+    "result": "PASS"
   },
   {
     "id": "TC-NEG-01",
