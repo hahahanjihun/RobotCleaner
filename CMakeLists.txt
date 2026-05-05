@@ -83,12 +83,15 @@ target_link_libraries(app RobotLogic) # 핵심 로직 연결
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
     tests/test_main.cpp 
-    tests/test_positive.cpp 
-    tests/test_negative.cpp 
+    tests/system_test.cpp 
+    tests/test_positive.cpp
+    tests/test_negative.cpp
 )
 # GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
 target_link_libraries(robot_tests 
     RobotLogic 
+    gtest_main
+    
 )
 
 # -----------------------------------------------------------------------------
