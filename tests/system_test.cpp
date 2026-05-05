@@ -7,14 +7,14 @@ int main() {
 
     addResult(results, "TC-POS-01", "Positive", "UC-00 -> UC-01 좌측 회피 전체 흐름", TC_POS_01);
     addResult(results, "TC-POS-02", "Positive", "UC-00 -> UC-03 고먼지 집중 청소", TC_POS_02);
-    addResult(results, "TC-POS-03", "Positive", "UC-00 -> UC-01 -> UC-02 모터 시퀀스", TC_POS_03);
-    addResult(results, "TC-POS-04", "Positive", "UC-01 -> UC-03 회피 후 집중 청소", TC_POS_04);
+    addResult(results, "TC-POS-03", "Positive", "UC-00 -> UC-01 -> UC-02 모터 시퀀스(왼쪽)", TC_POS_03);
+    addResult(results, "TC-POS-04", "Positive", "UC-00 -> UC-01 -> UC-02 모터 시퀀스(왼쪽 막히고 오른쪽)", TC_POS_04);
     addResult(results, "TC-POS-05", "Positive", "UC-03 -> UC-01 집중 청소 후 회피", TC_POS_05);
     addResult(results, "TC-POS-06", "Positive", "2회 연속 전방 장애물 회피", TC_POS_06);
     addResult(results, "TC-POS-07", "Positive", "UC-03 2회 연속 집중 청소", TC_POS_07);
-    addResult(results, "TC-POS-08", "Positive", "UC-02 loop -> UC-03 연속 흐름", TC_POS_08);
+    addResult(results, "TC-POS-08", "Positive", "UC-00 → UC-03 미진입 (저먼지 조건) 일반 청소 유지", TC_POS_08);
     addResult(results, "TC-POS-09", "Positive", "UC-00 -> UC-03 -> UC-01 -> UC-02 전체 순차 수행", TC_POS_09);
-    addResult(results, "TC-POS-10", "Positive", "전체 시나리오 2회 반복 수행", TC_POS_10);
+    addResult(results, "TC-POS-10", "Positive", "UC-00 → UC-01 미진입 (좌우 장애물, 전방 개방) 직진 유지", TC_POS_10);
 
     addResult(results, "TC-NEG-01", "Negative", "CLEANING 중 startCleaning 중복 호출", TC_NEG_01);
     addResult(results, "TC-NEG-02", "Negative", "CLEANING 중 resumeCleaning 호출", TC_NEG_02);
