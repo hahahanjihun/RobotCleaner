@@ -2,8 +2,7 @@
 # [강제 설정] 모든 타겟에 커버리지 옵션 적용
 # ---------------------------------------------------------
 # 맥(Clang)과 리눅스(GCC) 공용 옵션이야.
-add_compile_options(--coverage)
-add_link_options(--coverage)
+
 # -----------------------------------------------------------------------------
 # 1. 기초 설정 (Basic Settings)
 # -----------------------------------------------------------------------------
@@ -13,6 +12,8 @@ project(RobotCleaner)
 # C++17 표준 사용 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(--coverage)
+add_link_options(--coverage)
 
 # -----------------------------------------------------------------------------
 # 2. 정적 분석 도구 설정 (Static Analysis Options)
@@ -47,7 +48,7 @@ endif()
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/refs/heads/main.zip
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
   DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 # Windows 등 다른 환경에서의 호환성을 위해 shared runtime 설정
@@ -82,14 +83,19 @@ target_link_libraries(app RobotLogic) # 핵심 로직 연결
 # [C] robot_tests: 단위 테스트(Unit Test)를 수행하는 실행 파일
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
-    tests/test_main.cpp 
+    tests/test_main.cpp
+    tests/rvc_unit_200_tests.cpp
+)
+target_include_directories(robot_tests BEFORE PRIVATE
+    ${googletest_SOURCE_DIR}/googletest/include
 )
 # GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
 target_link_libraries(robot_tests 
-    RobotLogic 
-    gtest_main
+    PRIVATE
+    RobotLogic
+    GTest::gtest
+    GTest::gtest_main
 )
-
 # -----------------------------------------------------------------------------
 # 5. 테스트 등록 (Test Registration)
 # -----------------------------------------------------------------------------
