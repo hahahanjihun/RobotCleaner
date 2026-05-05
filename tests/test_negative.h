@@ -1,0 +1,22 @@
+#pragma once
+
+bool TC_NEG_01();
+bool TC_NEG_02();
+bool TC_NEG_03();
+bool TC_NEG_04();
+bool TC_NEG_05();
+bool TC_NEG_06();
+bool TC_NEG_07();
+bool TC_NEG_08();
+bool TC_NEG_09();
+bool TC_NEG_10();
+bool TC_NEG_11();
+bool TC_NEG_12();
+bool TC_NEG_13();
+bool TC_NEG_14();
+bool TC_NEG_15();
+bool TC_NEG_16();
+bool TC_NEG_17();
+bool TC_NEG_18();
+bool TC_NEG_19();
+bool TC_NEG_20();

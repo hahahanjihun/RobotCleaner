@@ -83,17 +83,32 @@ target_link_libraries(app RobotLogic) # 핵심 로직 연결
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
     tests/test_main.cpp 
+    tests/system_test.cpp 
+    tests/test_positive.cpp
+    tests/test_negative.cpp
 )
 # GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
 target_link_libraries(robot_tests 
     RobotLogic 
     gtest_main
+    
 )
 
 # -----------------------------------------------------------------------------
 # 5. 테스트 등록 (Test Registration)
 # -----------------------------------------------------------------------------
 enable_testing()
+
 # 'ctest' 명령어로 모든 테스트를 한 번에 실행 가능함
 add_test(NAME MyRobotSystemTest COMMAND robot_tests)
 
+# System Test HTML Report용 실행 파일
+add_executable(system_test
+    tests/system_test.cpp
+    tests/test_positive.cpp
+    tests/test_negative.cpp
+)
+
+target_link_libraries(system_test
+    RobotLogic
+)

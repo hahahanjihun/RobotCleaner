@@ -15,7 +15,7 @@ void DustController::dustStatus(float dustLevel) {
         
         cleanerHandler->boostPower(); // 흡입력 부스트
         
-        std::this_thread::sleep_for(std::chrono::seconds(5)); // 5초간 집중 청소 딜레이
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // 5초간 집중 청소 딜레이
         
         cleanerHandler->normalizePower(); // 흡입력 정상화
         rvcController->resumeNormalCleaning(); // 집중 청소 종료 및 복귀 보고
