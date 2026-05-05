@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>RobotCleaner System Test Report</title>
+<style>
+body { font-family: Arial; background:#f5f6fa; margin:40px; }
+.card { background:white; padding:24px; border-radius:12px; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { border:1px solid #ddd; padding:12px; }
+th { background:#2f3542; color:white; }
+.summary { display:flex; gap:12px; }
+.box { background:#f1f2f6; padding:16px; border-radius:8px; flex:1; }
+</style>
+</head>
+<body>
+<div class="card">
+<h1>RobotCleaner System Test Report</h1>
+
+<div class="summary">
+<div class="box"><h3>Total</h3><p>30</p></div>
+<div class="box"><h3>PASS</h3><p>30</p></div>
+<div class="box"><h3>FAIL</h3><p>0</p></div>
+<div class="box"><h3>Success Rate</h3><p>100.0%</p></div>
+</div>
+
+<table>
+<tr>
+<th>TC ID</th>
+<th>Test Case</th>
+<th>Result</th>
+</tr>
+
+    <tr style="background:#d4edda">
+        <td>TC-POS-01</td>
+        <td>UC-00 -> UC-01 좌측 회피 전체 흐름</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-02</td>
+        <td>UC-00 -> UC-03 고먼지 집중 청소</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-03</td>
+        <td>UC-00 -> UC-01 -> UC-02 모터 시퀀스(왼쪽)</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-04</td>
+        <td>UC-00 -> UC-01 -> UC-02 모터 시퀀스(왼쪽 막히고 오른쪽)</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-05</td>
+        <td>UC-03 -> UC-01 집중 청소 후 회피</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-06</td>
+        <td>2회 연속 전방 장애물 회피</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-07</td>
+        <td>UC-03 2회 연속 집중 청소</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-08</td>
+        <td>UC-00 → UC-03 미진입 (저먼지 조건) 일반 청소 유지</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-09</td>
+        <td>UC-00 -> UC-03 -> UC-01 -> UC-02 전체 순차 수행</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-POS-10</td>
+        <td>UC-00 → UC-01 미진입 (좌우 장애물, 전방 개방) 직진 유지</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-01</td>
+        <td>CLEANING 중 startCleaning 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-02</td>
+        <td>CLEANING 중 resumeCleaning 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-03</td>
+        <td>유효하지 않은 SystemState 변경 시도</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-04</td>
+        <td>AVOIDING 중 startCleaning 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-05</td>
+        <td>동일한 상태로 changeState 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-06</td>
+        <td>비정상 Position 데이터 입력</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-07</td>
+        <td>회피 중 전방 장애물 재발생</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-08</td>
+        <td>FORWARD 상태에서 moveForward 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-09</td>
+        <td>BACKWARD 상태에서 moveBackward 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-10</td>
+        <td>LEFT 상태에서 turnLeft 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-11</td>
+        <td>RIGHT 상태에서 turnRight 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-12</td>
+        <td>STOPPED 상태에서 stopMotor 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-13</td>
+        <td>음수 DustLevel 입력</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-14</td>
+        <td>매우 큰 DustLevel 입력</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-15</td>
+        <td>OFF 상태에서 deactivateCleaner 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-16</td>
+        <td>NORMAL 상태에서 activateCleaner 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-17</td>
+        <td>BOOST 상태에서 boostPower 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-18</td>
+        <td>NORMAL 상태에서 normalizePower 중복 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-19</td>
+        <td>OFF 상태에서 normalizePower 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+    <tr style="background:#d4edda">
+        <td>TC-NEG-20</td>
+        <td>OFF 상태에서 boostPower 호출</td>
+        <td><b>PASS</b></td>
+    </tr>
+    
+</table>
+</div>
+</body>
+</html>
