@@ -50,10 +50,11 @@ jobs:
           ctest --output-on-failure
 
       # 6. 시스템 테스트 빌드
-      - name: Build System Test
-        run: |
-          g++ -std=c++17 tests/system_test.cpp -o system_test
+      - name: Configure CMake
+        run: cmake -B build
 
+      - name: Build
+        run: cmake --build build --target system_test
       # 7. 시스템 테스트 실행
       - name: Run System Test
         run: |
