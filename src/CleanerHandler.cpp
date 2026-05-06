@@ -38,6 +38,11 @@ void CleanerHandler::boostPower() {
 }
 
 void CleanerHandler::normalizePower() {
+    if (powerLevel == PowerSetting::NORMAL) {
+        std::cout << "[Cleaner] 이미 NORMAL 상태입니다\n";
+        return;  // NEG-18
+    }
+
     if (powerLevel == PowerSetting::NORMAL) return;  // NEG-18
 
     // NEG-19: OFF 상태에서 전력 조절 차단
