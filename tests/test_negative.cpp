@@ -46,7 +46,7 @@ bool TC_NEG_03() {
 // ==========================================
 // TC-NEG-04
 // AVOIDING 중 startCleaning() 호출
-// 예상: 회피 동작 우선, 새 청소 명령 무시 → AVOIDING 유지
+// 예상: 회피 동작 우선, 새 청소 명령 무시 -> AVOIDING 유지
 // ==========================================
 bool TC_NEG_04() {
     TestContext t;
@@ -277,7 +277,6 @@ bool TC_NEG_18() {
 // TC-NEG-19
 // Cleaner가 비활성화(OFF) 상태에서 normalizePower() 호출
 // 예상: activate() 전에는 전력 조절 명령을 수행하지 않음, OFF 유지
-// (현재 코드에 방어 로직 없으므로 실패 → 버그 탐지)
 // ==========================================
 bool TC_NEG_19() {
     TestContext t;
@@ -293,7 +292,6 @@ bool TC_NEG_19() {
 // TC-NEG-20
 // Cleaner가 비활성화(OFF) 상태에서 boostPower() 호출
 // 예상: activate() 전에는 전력 조절 명령을 수행하지 않음, OFF 유지
-// (현재 코드에 방어 로직 없으므로 실패 → 버그 탐지)
 // ==========================================
 bool TC_NEG_20() {
     TestContext t;
