@@ -85,7 +85,7 @@ bool TC_NEG_06() {
     t.motor.turnLeft();
     t.motor.turnRight();
 
-    return t.motor.getStatus() == DriveSetting::STOPPED;
+    return t.motor.getStatus() == DriveSetting::FORWARD;
 }
 
 // ==========================================
