@@ -12,8 +12,8 @@ bool TC_NEG_01() {
     t.rvc.startCleaning();
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.motor.getStatus() == DriveSetting::FORWARD &&
-           t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
+            t.motor.getStatus() == DriveSetting::FORWARD &&
+            t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
 
 // ==========================================
@@ -27,7 +27,7 @@ bool TC_NEG_02() {
     t.rvc.resumeCleaning();
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.motor.getStatus() == DriveSetting::FORWARD;
+            t.motor.getStatus() == DriveSetting::FORWARD;
 }
 
 // ==========================================
@@ -58,7 +58,7 @@ bool TC_NEG_04() {
     t.rvc.startCleaning();
 
     return t.rvc.getSystemState() == SystemState::AVOIDING &&
-           t.motor.getStatus() == DriveSetting::BACKWARD;
+            t.motor.getStatus() == DriveSetting::BACKWARD;
 }
 
 // ==========================================
@@ -76,15 +76,14 @@ bool TC_NEG_05() {
 
 // ==========================================
 // TC-NEG-06
-// Position 데이터가 비정상 형식일 때 (모든 필드 false)
-// 예상: ActionController가 이를 무시하고 stopMotor() 호출
+// moveForward 중 정지 단계가 생략된 급격한 방향 전환(turnLeft(), turnLigit() 호출)
+// 예상: 비정상적인 상태로 인지하고, 현재 구동 상태를 유지
 // ==========================================
 bool TC_NEG_06() {
     TestContext t;
     t.rvc.startCleaning();
-
-    Position emptyPos = {false, false, false};
-    t.obstacleSensor.notifyFrontObstacle(emptyPos);
+    t.motor.turnLeft();
+    t.motor.turnRight();
 
     return t.motor.getStatus() == DriveSetting::STOPPED;
 }
@@ -103,8 +102,8 @@ bool TC_NEG_07() {
     t.obstacleSensor.notifyFrontObstacle(allBlocked);
 
     return t.rvc.getSystemState() == SystemState::AVOIDING &&
-           t.motor.getStatus() == DriveSetting::BACKWARD &&
-           t.cleaner.getPowerLevel() == PowerSetting::OFF;
+            t.motor.getStatus() == DriveSetting::BACKWARD &&
+            t.cleaner.getPowerLevel() == PowerSetting::OFF;
 }
 
 // ==========================================
@@ -144,6 +143,10 @@ bool TC_NEG_09() {
 // ==========================================
 bool TC_NEG_10() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.motor.stopMotor();
+
     t.motor.turnLeft();
     t.motor.turnLeft();
 
@@ -157,6 +160,10 @@ bool TC_NEG_10() {
 // ==========================================
 bool TC_NEG_11() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.motor.stopMotor();
+
     t.motor.turnRight();
     t.motor.turnRight();
 
@@ -170,6 +177,9 @@ bool TC_NEG_11() {
 // ==========================================
 bool TC_NEG_12() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.motor.stopMotor();
     t.motor.stopMotor();
 
     return t.motor.getStatus() == DriveSetting::STOPPED;
@@ -186,7 +196,7 @@ bool TC_NEG_13() {
     t.dustSensor.notifyDust(-1.0f);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
+            t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
 
 // ==========================================
@@ -201,7 +211,7 @@ bool TC_NEG_14() {
     t.dustSensor.notifyDust(std::numeric_limits<float>::max());
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
-           t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
+            t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
 }
 
 
@@ -212,6 +222,9 @@ bool TC_NEG_14() {
 // ==========================================
 bool TC_NEG_15() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.cleaner.deactivateCleaner();
     t.cleaner.deactivateCleaner();
 
     return t.cleaner.getPowerLevel() == PowerSetting::OFF;
@@ -224,7 +237,8 @@ bool TC_NEG_15() {
 // ==========================================
 bool TC_NEG_16() {
     TestContext t;
-    t.cleaner.activateCleaner();
+    t.rvc.startCleaning();
+
     t.cleaner.activateCleaner();
 
     return t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
@@ -237,7 +251,8 @@ bool TC_NEG_16() {
 // ==========================================
 bool TC_NEG_17() {
     TestContext t;
-    t.cleaner.activateCleaner();
+    t.rvc.startCleaning();
+
     t.cleaner.boostPower();
     t.cleaner.boostPower();
 
@@ -251,8 +266,8 @@ bool TC_NEG_17() {
 // ==========================================
 bool TC_NEG_18() {
     TestContext t;
-    t.cleaner.activateCleaner();
-    t.cleaner.normalizePower();
+    t.rvc.startCleaning();
+
     t.cleaner.normalizePower();
 
     return t.cleaner.getPowerLevel() == PowerSetting::NORMAL;
@@ -266,6 +281,9 @@ bool TC_NEG_18() {
 // ==========================================
 bool TC_NEG_19() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.cleaner.deactivateCleaner();
     t.cleaner.normalizePower();
 
     return t.cleaner.getPowerLevel() == PowerSetting::OFF;
@@ -279,6 +297,9 @@ bool TC_NEG_19() {
 // ==========================================
 bool TC_NEG_20() {
     TestContext t;
+    t.rvc.startCleaning();
+
+    t.cleaner.deactivateCleaner();
     t.cleaner.boostPower();
 
     return t.cleaner.getPowerLevel() == PowerSetting::OFF;

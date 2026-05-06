@@ -82,8 +82,8 @@ target_link_libraries(app RobotLogic) # 핵심 로직 연결
 # [C] robot_tests: 단위 테스트(Unit Test)를 수행하는 실행 파일
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
-    tests/test_main.cpp 
-    tests/system_test.cpp 
+    tests/unit_test.cpp 
+    tests/simulator.cpp 
     tests/test_positive.cpp
     tests/test_negative.cpp
 )
@@ -104,7 +104,7 @@ add_test(NAME MyRobotSystemTest COMMAND robot_tests)
 
 # System Test HTML Report용 실행 파일
 add_executable(system_test
-    tests/system_test.cpp
+    tests/simulator.cpp
     tests/test_positive.cpp
     tests/test_negative.cpp
 )

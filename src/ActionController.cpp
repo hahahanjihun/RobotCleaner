@@ -18,7 +18,7 @@ void ActionController::obstacleStatus(Position loc) {
     
     // 1. 정상 청소 중 전방 장애물 최초 감지 
     if (!isEvading && loc.isFrontBlocked) {
-        std::cout << "\n[ActionController] 전방 장애물 감지! 회피 시작...\n";
+        std::cout << "[ActionController] 전방 장애물 감지! 회피 시작...\n";
         
         isEvading = true; // 회피 시작
         rvcController->changeState(SystemState::AVOIDING); // 메인 시스템에 보고
