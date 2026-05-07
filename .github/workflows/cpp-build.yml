@@ -43,11 +43,9 @@ jobs:
       - name: Run cppcheck
         continue-on-error: true
         run: |
-          cppcheck --enable=all --inconclusive --std=c++17 --checkers-report=checkers-report.txt .
-          if [ -f checkers-report.txt ]; then
-            echo "=== Checkers Report Detail ==="
-            cat checkers-report.txt
-          fi
+          cppcheck --enable=all --inconclusive --std=c++17 \
+             --template='[{file}:{line}]: ({severity}) {message}' \
+             src
 
       - name: Run clang-tidy
         continue-on-error: true
