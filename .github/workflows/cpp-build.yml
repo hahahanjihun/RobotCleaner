@@ -28,7 +28,12 @@ jobs:
 
       # 3. CMake 설정
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_FLAGS="--coverage" \
+            -DCMAKE_C_FLAGS="--coverage" \
+            -DCMAKE_EXE_LINKER_FLAGS="--coverage"
 
       # 4. 빌드 (수정 완료)
       - name: Build Project
@@ -63,7 +68,7 @@ jobs:
       - name: Generate gcov files
         run: |
           cd build
-          find . -name "*.o" -exec gcov -p -l {} +
+          find build -name "*.gcda" -exec gcov -p -l {} +
 
       # 8. HTML 리포트 생성
       - name: Generate HTML Report
