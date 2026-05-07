@@ -37,7 +37,7 @@ jobs:
       # 5. 정적 분석
       - name: Run cppcheck
         continue-on-error: true
-        run: cppcheck --enable=all --inconclusive --std=c++17 .
+        run: cppcheck --enable=all --inconclusive --std=c++17 --checkers-report=checkers-report.txt .
 
       - name: Run clang-tidy
         continue-on-error: true
