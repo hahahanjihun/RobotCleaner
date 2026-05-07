@@ -67,7 +67,6 @@ jobs:
       # 7.5. gcov 파일 생성
       - name: Generate gcov files
         run: |
-          cd build
           find build -name "*.gcda" -exec gcov -p -l {} +
 
       # 8. HTML 리포트 생성
