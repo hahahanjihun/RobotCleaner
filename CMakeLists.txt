@@ -1,13 +1,11 @@
-# ---------------------------------------------------------
-# 커버리지 옵션 적용
-# ---------------------------------------------------------
-add_compile_options(--coverage)
-add_link_options(--coverage)
 # -----------------------------------------------------------------------------
 # 1. 기초 설정 (Basic Settings)
 # -----------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.14)
 project(RobotCleaner)
+# 커버리지 측정
+add_compile_options(--coverage)
+add_link_options(--coverage)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
