@@ -8,13 +8,6 @@ ActionController::ActionController(MotorHandler* mh, CleanerHandler* ch, RVCCont
     : motorHandler(mh), cleanerHandler(ch), rvcController(rvc) {}
 
 void ActionController::obstacleStatus(Position loc) {
-
-    // NEG-06: Position의 값이 비정상인 경우에 Motor를 정지시키기 위함.
-    if (!loc.isFrontBlocked && !loc.isLeftBlocked && !loc.isRightBlocked) {
-        std::cout << "[ActionController] 비정상 Position 감지.\n";
-        motorHandler->stopMotor();
-        return;
-    }
     
     // 1. 정상 청소 중 전방 장애물 최초 감지 
     if (!isEvading && loc.isFrontBlocked) {
@@ -44,7 +37,7 @@ void ActionController::obstacleStatus(Position loc) {
             rvcController->resumeCleaning(); 
         } 
         else {
-            // 양쪽이 모두 막혀있다면 (UC-02 Loop)
+            // 양쪽이 모두 막혀있다면 
             std::cout << "[ActionController] 양쪽 모두가 막힘. 후진 중...\n";
             motorHandler->moveBackward(); 
         }

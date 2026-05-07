@@ -16,7 +16,6 @@ void MotorHandler::moveForward() {
 
 void MotorHandler::moveBackward() {
     if (status == DriveSetting::BACKWARD) {
-        std::cout << "[Motor] 이미 후진 중입니다\n";
         return;
     }
 

@@ -15,6 +15,6 @@ public:
     void boostPower();        // 강력 모드로 변경
     void normalizePower();    // 일반 모드로 복구
 
-     // GTest에서 상태 검증을 위한 Getter
+     // GTest에서 상태 검증을 위한 Getter. unit test 전용 함수이며 실제 구현코드에는 사용하지 않습니다.
     PowerSetting getPowerLevel() const;          
 };

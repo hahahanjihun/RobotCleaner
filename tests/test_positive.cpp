@@ -128,7 +128,6 @@ bool TC_POS_06() {
 // TC-POS-07
 // UC-03 2회 연속 집중 청소 수행
 // BOOSTING -> CLEANING -> BOOSTING -> CLEANING 독립 수행 확인
-// (주의: 약 10초 소요)
 // ==========================================
 bool TC_POS_07() {
     TestContext t;
@@ -189,7 +188,7 @@ bool TC_POS_09() {
 
 // ==========================================
 // TC-POS-10
-// UC-00 단일 흐름 (부분 장애물)
+// UC-00 단일 흐름 
 // startCleaning() -> 좌/우 장애물 감지 -> 전방 비어있음 -> 회피 없이 직진 유지
 // SystemState: CLEANING 유지 (AVOIDING 미진입)
 // MotorHandler: FORWARD 유지
