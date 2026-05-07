@@ -19,5 +19,5 @@ public:
     
     void changeState(SystemState newState); // 서브 컨트롤러의 상태 동기화용 메서드
     
-    SystemState getSystemState() const;           // GTest에서 상태 검증을 위한 Getter
+    SystemState getSystemState() const; // GTest에서 상태 검증을 위한 Getter. unit test 전용 함수이며 실제 구현코드에는 사용하지 않습니다.
 };

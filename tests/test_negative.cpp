@@ -203,7 +203,6 @@ bool TC_NEG_13() {
 // TC-NEG-14
 // DustLevel에 float 범위를 초과하는 매우 큰 값 입력
 // 예상: 최대 PowerSetting(BOOST)까지만 상승, 크래시 없이 정상 복귀
-// (주의: 약 5초 소요)
 // ==========================================
 bool TC_NEG_14() {
     TestContext t;

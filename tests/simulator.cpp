@@ -51,7 +51,7 @@ int main() {
     addResult(results, "TC-NEG-05", "Negative", "동일한 상태로 changeState 호출", TC_NEG_05);
 
     std::cout << "\n[Negative Test - 06]\n";
-    addResult(results, "TC-NEG-06", "Negative", "비정상 Position 데이터 입력", TC_NEG_06);
+    addResult(results, "TC-NEG-06", "Negative", "FORWARD 중 정지 단계가 생략된 급격한 방향 전환", TC_NEG_06);
 
     std::cout << "\n[Negative Test - 07]\n";
     addResult(results, "TC-NEG-07", "Negative", "회피 중 전방 장애물 재발생", TC_NEG_07);

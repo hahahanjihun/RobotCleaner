@@ -1,7 +1,6 @@
 # ---------------------------------------------------------
-# [강제 설정] 모든 타겟에 커버리지 옵션 적용
+# 커버리지 옵션 적용
 # ---------------------------------------------------------
-# 맥(Clang)과 리눅스(GCC) 공용 옵션이야.
 add_compile_options(--coverage)
 add_link_options(--coverage)
 # -----------------------------------------------------------------------------
@@ -10,13 +9,11 @@ add_link_options(--coverage)
 cmake_minimum_required(VERSION 3.14)
 project(RobotCleaner)
 
-# C++17 표준 사용 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -----------------------------------------------------------------------------
-# 2. 정적 분석 도구 설정 (Static Analysis Options)
-# 팀원들마다 설치 환경이 다를 수 있으므로 '선택 사항'으로 설정함
+# 2. 정적 분석 도구 설정 
 # 사용법: cmake -DENABLE_STATIC_ANALYSIS=ON ..
 # -----------------------------------------------------------------------------
 option(ENABLE_STATIC_ANALYSIS "Enable cppcheck and clang-tidy analysis" OFF)
@@ -28,7 +25,7 @@ if(ENABLE_STATIC_ANALYSIS)
         set(CMAKE_CXX_CPPCHECK "${CPPCHECK_PATH};--enable=all;--suppress=missingIncludeSystem")
     endif()
 
-    # Clang-Tidy: 코드 가독성 및 최신 문법(Modern C++) 검사
+    # Clang-Tidy: 코드 가독성 및 최신 문법 검사
     find_program(CLANG_TIDY_PATH clang-tidy)
     if(CLANG_TIDY_PATH)
         set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_PATH};-checks=-*,readability-*,modernize-*,performance-*")
@@ -42,7 +39,6 @@ endif()
 
 # -----------------------------------------------------------------------------
 # 3. 구글 테스트(GTest) 의존성 관리
-# 인터넷을 통해 자동으로 다운로드하므로 수동 설치가 필요 없음
 # -----------------------------------------------------------------------------
 include(FetchContent)
 FetchContent_Declare(
@@ -59,7 +55,7 @@ FetchContent_MakeAvailable(googletest)
 # -----------------------------------------------------------------------------
 
 
-# [A] RobotLogic: 실제 로봇 청소기 기능이 구현된 핵심 소스들 (라이브러리 형태)
+# RobotLogic: 실제 로봇 청소기 기능이 구현된 핵심 소스들 
 # 실제 앱과 테스트 앱에서 공통으로 사용하므로 따로 묶어서 관리함
 add_library(RobotLogic
     src/CleanerHandler.cpp
@@ -71,15 +67,15 @@ add_library(RobotLogic
     src/DustSensorHandler.cpp
 )
 
-# RobotLogic을 사용하는 모든 타겟(app, robot_tests)이 
+# RobotLogic을 사용하는 모든 타겟이 
 # 자동으로 src 폴더의 헤더 파일들을 찾을 수 있게 해주는 설정
 target_include_directories(RobotLogic PUBLIC src)
 
-# [B] app: 실제 프로그램을 실행하는 실행 파일
+# app: 실제 프로그램을 실행하는 실행 파일
 add_executable(app src/main.cpp)
 target_link_libraries(app RobotLogic) # 핵심 로직 연결
 
-# [C] robot_tests: 단위 테스트(Unit Test)를 수행하는 실행 파일
+# robot_tests: 단위 테스트를 수행하는 실행 파일
 # 모든 테스트용 .cpp 파일을 여기에 포함시켜야 함
 add_executable(robot_tests 
     tests/unit_test.cpp 
@@ -87,11 +83,10 @@ add_executable(robot_tests
     tests/test_positive.cpp
     tests/test_negative.cpp
 )
-# GTest의 main() 함수와 핵심 로직(RobotLogic)을 연결
+# GTest의 main() 함수와 핵심 로직을 연결
 target_link_libraries(robot_tests 
     RobotLogic 
     gtest_main
-    
 )
 
 # -----------------------------------------------------------------------------
@@ -99,7 +94,6 @@ target_link_libraries(robot_tests
 # -----------------------------------------------------------------------------
 enable_testing()
 
-# 'ctest' 명령어로 모든 테스트를 한 번에 실행 가능함
 add_test(NAME MyRobotSystemTest COMMAND robot_tests)
 
 # System Test HTML Report용 실행 파일

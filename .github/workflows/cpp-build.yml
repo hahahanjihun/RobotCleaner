@@ -60,7 +60,7 @@ jobs:
         run: |
           ./build/system_test
 
-      # 7.5. gcov 파일 생성 (SonarCloud 분석용 데이터 추출)
+      # 7.5. gcov 파일 생성
       - name: Generate gcov files
         run: |
           cd build
@@ -71,7 +71,7 @@ jobs:
         run: |
           python3 scripts/generate_report.py
 
-      # 9. 결과 파일 업로드 (Artifacts)
+      # 9. 결과 파일 업로드 
       - name: Upload System Test Results
         uses: actions/upload-artifact@v4
         with:
