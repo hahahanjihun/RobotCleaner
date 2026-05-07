@@ -44,7 +44,7 @@ void ActionController::obstacleStatus(Position loc) {
             rvcController->resumeCleaning(); 
         } 
         else {
-            // 양쪽이 모두 막혀있다면 (UC-02 Loop)
+            // 양쪽이 모두 막혀있다면 
             std::cout << "[ActionController] 양쪽 모두가 막힘. 후진 중...\n";
             motorHandler->moveBackward(); 
         }
