@@ -50,7 +50,6 @@ build/
 .vs/
 out/
 build/
-/build
 Debug/
 Release/
 *.user
