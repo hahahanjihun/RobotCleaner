@@ -632,8 +632,8 @@ static std::vector<ObstacleSensorCase> MakeObstacleSensorCases() {
 
                         ObstacleSensorCase tc;
                         tc.name = std::string(start ? "Start_" : "NoStart_") +
-                                  (frontNotify ? "NotifyFront_" : "NotifySide_") +
-                                  PositionName(f, l, r);
+                                    (frontNotify ? "NotifyFront_" : "NotifySide_") +
+                                    PositionName(f, l, r);
                         tc.useStartCleaning = start;
                         tc.useFrontNotify = frontNotify;
                         tc.front = f;

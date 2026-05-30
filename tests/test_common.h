@@ -35,10 +35,10 @@ public:
 
     TestContext()
         : rvc(&cleaner, &motor),
-          actionCtrl(&motor, &cleaner, &rvc),
-          dustCtrl(&cleaner, &rvc),
-          obstacleSensor(&actionCtrl),
-          dustSensor(&dustCtrl) {}
+            actionCtrl(&motor, &cleaner, &rvc),
+            dustCtrl(&cleaner, &rvc),
+            obstacleSensor(&actionCtrl),
+            dustSensor(&dustCtrl) {}
 };
 
 inline void addResult(
