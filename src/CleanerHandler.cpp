@@ -5,29 +5,32 @@
 CleanerHandler::CleanerHandler() = default;
 
 void CleanerHandler::activateCleaner() {
+     // NEG-16
     if (powerLevel == PowerSetting::NORMAL) {
         std::cout << "[Cleaner] 이미 NORMAL 상태입니다\n";
-        return;  // NEG-16
+        return; 
     }
     powerLevel = PowerSetting::NORMAL;
     std::cout << "[Cleaner] 청소기 흡입 ON\n";
 }
 void CleanerHandler::deactivateCleaner() {
+    // NEG-15
     if (powerLevel == PowerSetting::OFF) {
         std::cout << "[Cleaner] 이미 OFF 상태입니다\n";
-        return;  // NEG-15
+        return;  
     }
     powerLevel = PowerSetting::OFF;
     std::cout << "[Cleaner] 청소기 흡입 OFF\n";
 }
 
 void CleanerHandler::boostPower() {
+    // NEG-17
     if (powerLevel == PowerSetting::BOOST) {
         std::cout << "[Cleaner] 이미 BOOST 상태입니다\n";
-        return;  // NEG-17
+        return;  
     }
 
-    // NEG-20: OFF 상태에서 전력 조절 차단
+    // NEG-20
     if (powerLevel == PowerSetting::OFF) {
         std::cout << "[Cleaner] 비활성 상태에서 전력 조절 불가\n";
         return;
@@ -38,14 +41,13 @@ void CleanerHandler::boostPower() {
 }
 
 void CleanerHandler::normalizePower() {
+    // NEG-18
     if (powerLevel == PowerSetting::NORMAL) {
         std::cout << "[Cleaner] 이미 NORMAL 상태입니다\n";
-        return;  // NEG-18
+        return;  
     }
 
-    if (powerLevel == PowerSetting::NORMAL) return;  // NEG-18
-
-    // NEG-19: OFF 상태에서 전력 조절 차단
+    // NEG-19
     if (powerLevel == PowerSetting::OFF) {
         std::cout << "[Cleaner] 비활성 상태에서 전력 조절 불가\n";
         return;

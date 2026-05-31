@@ -28,50 +28,51 @@ jobs:
 
       # 3. CMake 설정
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_CXX_FLAGS="--coverage" \
+            -DCMAKE_C_FLAGS="--coverage" \
+            -DCMAKE_EXE_LINKER_FLAGS="--coverage"
 
-      # 4. 빌드
+      # 4. 빌드 (수정 완료)
       - name: Build Project
         run: cmake --build build
 
       # 5. 정적 분석
       - name: Run cppcheck
         continue-on-error: true
-        run: cppcheck --enable=all --inconclusive --std=c++17 .
+        run: |
+          cppcheck --enable=all --inconclusive --std=c++17 \
+             --template='[{file}:{line}]: ({severity}) {message}' \
+             src
 
       - name: Run clang-tidy
         continue-on-error: true
         run: run-clang-tidy -p build
 
-      # GTest 
+      # GTest 설정
       - name: Run Google Tests
         run: |
           cd build
           ctest --output-on-failure
 
-      # 6. 시스템 테스트 빌드
-      - name: Configure CMake
-        run: cmake -B build
-
-      - name: Build
-        run: cmake --build build --target system_test
       # 7. 시스템 테스트 실행
       - name: Run System Test
         run: |
           ./build/system_test
 
-      # 7.5. gcov 파일 생성 (SonarCloud 분석용 데이터 추출)
+      # 7.5. gcov 파일 생성
       - name: Generate gcov files
         run: |
-          cd build
-          find . -name "*.o" -exec gcov -p -l {} +
+          find build -name "*.gcda" -exec gcov -p -l {} +
 
       # 8. HTML 리포트 생성
       - name: Generate HTML Report
         run: |
           python3 scripts/generate_report.py
 
-      # 9. 결과 파일 업로드 (Artifacts)
+      # 9. 결과 파일 업로드 
       - name: Upload System Test Results
         uses: actions/upload-artifact@v4
         with:
@@ -107,5 +108,5 @@ jobs:
             -Dsonar.sources=src \
             -Dsonar.tests=tests \
             -Dsonar.cfamily.compile-commands=build/compile_commands.json \
-            -Dsonar.cfamily.gcov.reportsPath=build \
+            -Dsonar.cfamily.gcov.reportsPath=. \
             -Dsonar.host.url=https://sonarcloud.io
