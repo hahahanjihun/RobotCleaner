@@ -30,3 +30,9 @@ struct Position {
     bool isLeftBlocked = false;  // 좌측 장애물 유무
     bool isRightBlocked = false; // 우측 장애물 유무
 };
+
+// 추가 코드 - ObstacleSensorHandler가 센서데이터 값을 받을 때 사용하기 위함.
+struct SensorData{
+    bool leftSensorData = false; // 좌측 장애물 유무 (true: 있음, false: 없음), 회피 중 turn right 상태일 때는 전방 장애물 유무  기능
+    bool frontSensorData = false; // 전방 장애물 유무 (true: 있음, false: 없음), 회피 중 turn right 상태일 때는 우측 장애물 유무 판단 기능
+};

@@ -89,7 +89,6 @@ TEST(CleanerHandlerTest, DeactivateCleanerSetsOff) {
 
 TEST(CleanerHandlerTest, BoostPowerSetsBoost) {
     CleanerHandler cleaner;
-    
     cleaner.activateCleaner();
     cleaner.boostPower();
 
@@ -98,7 +97,6 @@ TEST(CleanerHandlerTest, BoostPowerSetsBoost) {
 
 TEST(CleanerHandlerTest, NormalizePowerSetsNormal) {
     CleanerHandler cleaner;
-
     cleaner.activateCleaner();
     cleaner.boostPower();
     cleaner.normalizePower();
@@ -175,7 +173,7 @@ TEST(ActionControllerTest, NoObstacleKeepsCleaning) {
 
     rvc.startCleaning();
 
-    Position loc = {false, false, false};
+    SensorData loc = {false, false};
     action.obstacleStatus(loc);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
@@ -183,7 +181,7 @@ TEST(ActionControllerTest, NoObstacleKeepsCleaning) {
     EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::NORMAL);
 }
 
-TEST(ActionControllerTest, FrontObstacleAndLeftFreeAvoidsThenForward) {
+TEST(ActionControllerTest, FrontObstacleStartsAvoidingAndTurnsRight) {
     CleanerHandler cleaner;
     MotorHandler motor;
     RVCController rvc(&cleaner, &motor);
@@ -191,18 +189,37 @@ TEST(ActionControllerTest, FrontObstacleAndLeftFreeAvoidsThenForward) {
 
     rvc.startCleaning();
 
-    Position loc;
-    loc.isFrontBlocked = true;
-    loc.isLeftBlocked = false;
-    loc.isRightBlocked = true;
-    action.obstacleStatus(loc);
+    SensorData firstDetect;
+    firstDetect.frontSensorData = true;
+    firstDetect.leftSensorData = false;
+
+    action.obstacleStatus(firstDetect);
+
+    EXPECT_EQ(rvc.getSystemState(), SystemState::AVOIDING);
+    EXPECT_EQ(motor.getStatus(), DriveSetting::RIGHT);
+    EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::OFF);
+}
+
+TEST(ActionControllerTest, FrontObstacleThenLeftFreeAvoidsLeftAndResumesCleaning) {
+    CleanerHandler cleaner;
+    MotorHandler motor;
+    RVCController rvc(&cleaner, &motor);
+    ActionController action(&motor, &cleaner, &rvc);
+
+    rvc.startCleaning();
+
+    SensorData firstDetect = {true, false};
+    action.obstacleStatus(firstDetect);
+
+    SensorData rightCheck = {false, false};
+    action.obstacleStatus(rightCheck);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
     EXPECT_EQ(motor.getStatus(), DriveSetting::FORWARD);
     EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::NORMAL);
 }
 
-TEST(ActionControllerTest, FrontObstacleAndRightFreeAvoidsThenForward) {
+TEST(ActionControllerTest, FrontObstacleThenRightFreeAvoidsRightAndResumesCleaning) {
     CleanerHandler cleaner;
     MotorHandler motor;
     RVCController rvc(&cleaner, &motor);
@@ -210,19 +227,18 @@ TEST(ActionControllerTest, FrontObstacleAndRightFreeAvoidsThenForward) {
 
     rvc.startCleaning();
 
-    Position loc;
-    loc.isFrontBlocked = true;
-    loc.isLeftBlocked = true;
-    loc.isRightBlocked = false;
+    SensorData firstDetect = {true, true};
+    action.obstacleStatus(firstDetect);
 
-    action.obstacleStatus(loc);
+    SensorData rightCheck = {false, false};
+    action.obstacleStatus(rightCheck);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
     EXPECT_EQ(motor.getStatus(), DriveSetting::FORWARD);
     EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::NORMAL);
 }
 
-TEST(ActionControllerTest, AllBlockedMovesBackward) {
+TEST(ActionControllerTest, BothSidesBlockedMovesBackward) {
     CleanerHandler cleaner;
     MotorHandler motor;
     RVCController rvc(&cleaner, &motor);
@@ -230,15 +246,18 @@ TEST(ActionControllerTest, AllBlockedMovesBackward) {
 
     rvc.startCleaning();
 
-    Position loc = {true, true, true};
-    action.obstacleStatus(loc);
+    SensorData firstDetect = {true, true};
+    action.obstacleStatus(firstDetect);
+
+    SensorData rightCheck = {true, true};
+    action.obstacleStatus(rightCheck);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::AVOIDING);
     EXPECT_EQ(motor.getStatus(), DriveSetting::BACKWARD);
     EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::OFF);
 }
 
-TEST(ActionControllerTest, BackwardThenSideFreeReturnsToCleaning) {
+TEST(ActionControllerTest, BackwardThenLeftFreeReturnsToCleaning) {
     CleanerHandler cleaner;
     MotorHandler motor;
     RVCController rvc(&cleaner, &motor);
@@ -246,14 +265,46 @@ TEST(ActionControllerTest, BackwardThenSideFreeReturnsToCleaning) {
 
     rvc.startCleaning();
 
-    Position trapped = {true, true, true};
-    action.obstacleStatus(trapped);
+    SensorData firstDetect = {true, true};
+    action.obstacleStatus(firstDetect);
 
-    Position escaped = {false, false, true};
-    action.obstacleStatus(escaped);
+    SensorData bothBlocked = {true, true};
+    action.obstacleStatus(bothBlocked);
+
+    SensorData afterBackward = {true, false};
+    action.obstacleStatus(afterBackward);
+
+    SensorData rightCheck = {true, false};
+    action.obstacleStatus(rightCheck);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
     EXPECT_EQ(motor.getStatus(), DriveSetting::FORWARD);
+    EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::NORMAL);
+}
+
+TEST(ActionControllerTest, BackwardThenRightFreeReturnsToCleaning) {
+    CleanerHandler cleaner;
+    MotorHandler motor;
+    RVCController rvc(&cleaner, &motor);
+    ActionController action(&motor, &cleaner, &rvc);
+
+    rvc.startCleaning();
+
+    SensorData firstDetect = {true, true};
+    action.obstacleStatus(firstDetect);
+
+    SensorData bothBlocked = {true, true};
+    action.obstacleStatus(bothBlocked);
+
+    SensorData afterBackward = {true, true};
+    action.obstacleStatus(afterBackward);
+
+    SensorData rightCheck = {false, false};
+    action.obstacleStatus(rightCheck);
+
+    EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);
+    EXPECT_EQ(motor.getStatus(), DriveSetting::FORWARD);
+    EXPECT_EQ(cleaner.getPowerLevel(), PowerSetting::NORMAL);
 }
 
 // -----------------------------
@@ -277,8 +328,7 @@ TEST(DustControllerTest, HighDustBoostsAndReturnsToCleaning) {
     MotorHandler motor;
     RVCController rvc(&cleaner, &motor);
     DustController dust(&cleaner, &rvc);
-
-    rvc.startCleaning();
+    cleaner.activateCleaner();
     dust.dustStatus(80.0f);
 
     EXPECT_EQ(rvc.getSystemState(), SystemState::CLEANING);

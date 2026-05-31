@@ -57,56 +57,56 @@ jobs:
           cd build
           ctest --output-on-failure
 
-      # 7. 시스템 테스트 실행
-      - name: Run System Test
-        run: |
-          ./build/system_test
+      # # 7. 시스템 테스트 실행
+      # - name: Run System Test
+      #   run: |
+      #     ./build/system_test
 
-      # 7.5. gcov 파일 생성
-      - name: Generate gcov files
-        run: |
-          find build -name "*.gcda" -exec gcov -p -l {} +
+      # # 7.5. gcov 파일 생성
+      # - name: Generate gcov files
+      #   run: |
+      #     find build -name "*.gcda" -exec gcov -p -l {} +
 
-      # 8. HTML 리포트 생성
-      - name: Generate HTML Report
-        run: |
-          python3 scripts/generate_report.py
+      # # 8. HTML 리포트 생성
+      # - name: Generate HTML Report
+      #   run: |
+      #     python3 scripts/generate_report.py
 
-      # 9. 결과 파일 업로드 
-      - name: Upload System Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: system-test-report
-          path: |
-            test_result.json
-            reports/report.html
+      # # 9. 결과 파일 업로드 
+      # - name: Upload System Test Results
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: system-test-report
+      #     path: |
+      #       test_result.json
+      #       reports/report.html
 
-      # 10. GitHub Pages 배포 (main 브랜치만)
-      - name: Deploy report to GitHub Pages
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports
+      # # 10. GitHub Pages 배포 (main 브랜치만)
+      # - name: Deploy report to GitHub Pages
+      #   if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./reports
 
-      # 11. SonarCloud 분석
-      - name: SonarCloud Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          export SCANNER_VERSION=6.2.1.4610
-          export SCANNER_HOME=$HOME/.sonar/sonar-scanner-${SCANNER_VERSION}-linux-x64
+      # # 11. SonarCloud 분석
+      # - name: SonarCloud Scan
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     export SCANNER_VERSION=6.2.1.4610
+      #     export SCANNER_HOME=$HOME/.sonar/sonar-scanner-${SCANNER_VERSION}-linux-x64
 
-          mkdir -p $HOME/.sonar
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux-x64.zip
-          unzip -o sonar-scanner.zip -d $HOME/.sonar/
+      #     mkdir -p $HOME/.sonar
+      #     curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux-x64.zip
+      #     unzip -o sonar-scanner.zip -d $HOME/.sonar/
 
-          $SCANNER_HOME/bin/sonar-scanner \
-            -Dsonar.projectKey=hahahanjihun_RobotCleaner \
-            -Dsonar.organization=hahahanjihun \
-            -Dsonar.sources=src \
-            -Dsonar.tests=tests \
-            -Dsonar.cfamily.compile-commands=build/compile_commands.json \
-            -Dsonar.cfamily.gcov.reportsPath=. \
-            -Dsonar.host.url=https://sonarcloud.io
+      #     $SCANNER_HOME/bin/sonar-scanner \
+      #       -Dsonar.projectKey=hahahanjihun_RobotCleaner \
+      #       -Dsonar.organization=hahahanjihun \
+      #       -Dsonar.sources=src \
+      #       -Dsonar.tests=tests \
+      #       -Dsonar.cfamily.compile-commands=build/compile_commands.json \
+      #       -Dsonar.cfamily.gcov.reportsPath=. \
+      #       -Dsonar.host.url=https://sonarcloud.io

@@ -30,8 +30,10 @@ void MotorHandler::turnLeft() {
     }
 
     if (status != DriveSetting::STOPPED) {
-        std::cout << "[Motor] 회전은 정지 상태에서만 가능합니다\n";
-        return;
+        if(status != DriveSetting::BACKWARD){ 
+            std::cout << "[Motor] 회전 가능한 상태가 아닙니다\n";
+            return;
+        }
     }
 
     status = DriveSetting::LEFT;
@@ -45,8 +47,10 @@ void MotorHandler::turnRight() {
     }
 
     if (status != DriveSetting::STOPPED) {
-        std::cout << "[Motor] 회전은 정지 상태에서만 가능합니다\n";
-        return;
+        if(status != DriveSetting::BACKWARD) {
+            std::cout << "[Motor] 회전 가능한 상태가 아닙니다\n";
+            return;
+        }
     }
 
     status = DriveSetting::RIGHT;
