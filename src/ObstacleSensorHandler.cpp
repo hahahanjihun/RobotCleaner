@@ -18,7 +18,7 @@ ObstacleSensorHandler::ObstacleSensorHandler(ActionController* ac)
 
 
 // 추가된 메서드
-void ObstacleSensorHandler::notifyObstacle(SensorDate loc) {
+void ObstacleSensorHandler::notifyObstacle(SensorData loc) {
     location = loc;
     actionController->obstacleStatus(location);
 }
