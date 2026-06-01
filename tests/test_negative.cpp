@@ -52,8 +52,11 @@ bool TC_NEG_04() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
+
+    SensorData rightBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(rightBlocked);
 
     t.rvc.startCleaning();
 
@@ -93,13 +96,18 @@ bool TC_NEG_06() {
 // isEvading 중 다시 전방 장애물 발생
 // 예상: 기존 회피 동작 그대로 진행 (이중 진입 방지)
 // ==========================================
+// TC_NEG_07
 bool TC_NEG_07() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
+
+    SensorData rightBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(rightBlocked);
+
+    t.obstacleSensor.notifyObstacle(allBlocked);
 
     return t.rvc.getSystemState() == SystemState::AVOIDING &&
             t.motor.getStatus() == DriveSetting::BACKWARD &&
@@ -128,8 +136,11 @@ bool TC_NEG_09() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
+
+    SensorData rightBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(rightBlocked);
 
     t.motor.moveBackward();
 
@@ -203,6 +214,7 @@ bool TC_NEG_13() {
 // TC-NEG-14
 // DustLevel에 float 범위를 초과하는 매우 큰 값 입력
 // 예상: 최대 PowerSetting(BOOST)까지만 상승, 크래시 없이 정상 복귀
+// (주의: 약 5초 소요)
 // ==========================================
 bool TC_NEG_14() {
     TestContext t;

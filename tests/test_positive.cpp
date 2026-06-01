@@ -11,8 +11,11 @@ bool TC_POS_01() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position leftClear = {true, false, true};
-    t.obstacleSensor.notifySideObstacle(leftClear);
+    SensorData firstDetect = {false, true};
+    t.obstacleSensor.notifyObstacle(firstDetect);
+
+    SensorData rightBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(rightBlocked);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
             t.motor.getStatus() == DriveSetting::FORWARD;
@@ -44,14 +47,14 @@ bool TC_POS_03() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
 
-    Position stillBlocked = {false, true, true};
-    t.obstacleSensor.notifySideObstacle(stillBlocked);
+    SensorData stillBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(stillBlocked);
 
-    Position leftClear = {false, false, true};
-    t.obstacleSensor.notifySideObstacle(leftClear);
+    SensorData leftClear = {false, false};
+    t.obstacleSensor.notifyObstacle(leftClear);
 
     return t.motor.getStatus() == DriveSetting::FORWARD &&
             t.rvc.getSystemState() == SystemState::CLEANING;
@@ -65,16 +68,14 @@ bool TC_POS_03() {
 // SystemState: CLEANING -> AVOIDING -> CLEANING
 // ==========================================
 bool TC_POS_04() {
-    TestContext t;
+     TestContext t;
     t.rvc.startCleaning();
 
-    // 1. 전방/좌측/우측 모두 막힘 -> 후진
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
 
-    // 2. 후진 중 좌측은 막혀 있고, 우측은 비어 있음 -> 우측 탈출
-    Position rightClear = {false, true, false};
-    t.obstacleSensor.notifySideObstacle(rightClear);
+    SensorData rightClear = {true, false};
+    t.obstacleSensor.notifyObstacle(rightClear);
 
     return t.motor.getStatus() == DriveSetting::FORWARD &&
             t.rvc.getSystemState() == SystemState::CLEANING;
@@ -91,11 +92,11 @@ bool TC_POS_05() {
 
     t.dustSensor.notifyDust(80.0f);
 
-    Position allBlocked = {true, true, true};
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
 
-    Position rightClear = {false, true, false};
-    t.obstacleSensor.notifySideObstacle(rightClear);
+    SensorData rightClear = {true, false};
+    t.obstacleSensor.notifyObstacle(rightClear);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
             t.motor.getStatus() == DriveSetting::FORWARD;
@@ -107,18 +108,20 @@ bool TC_POS_05() {
 // isEvading 플래그가 true -> false -> true -> false 로 정상 전환되는지 확인
 // ==========================================
 bool TC_POS_06() {
-    TestContext t;
+     TestContext t;
     t.rvc.startCleaning();
 
-    Position allBlocked = {true, true, true};
-    Position leftClear = {false, false, true};
-    Position rightClear = {false, true, false};
+    SensorData leftClear = {false, true};
+    SensorData rightBlocked = {true, true};
 
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    t.obstacleSensor.notifySideObstacle(leftClear);
+    t.obstacleSensor.notifyObstacle(leftClear);
+    t.obstacleSensor.notifyObstacle(rightBlocked);
 
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    t.obstacleSensor.notifySideObstacle(rightClear);
+    SensorData allBlocked = {true, true};
+    SensorData rightClear = {true, false};
+
+    t.obstacleSensor.notifyObstacle(allBlocked);
+    t.obstacleSensor.notifyObstacle(rightClear);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
             t.motor.getStatus() == DriveSetting::FORWARD;
@@ -128,6 +131,7 @@ bool TC_POS_06() {
 // TC-POS-07
 // UC-03 2회 연속 집중 청소 수행
 // BOOSTING -> CLEANING -> BOOSTING -> CLEANING 독립 수행 확인
+// (주의: 약 10초 소요)
 // ==========================================
 bool TC_POS_07() {
     TestContext t;
@@ -174,13 +178,14 @@ bool TC_POS_09() {
 
     t.dustSensor.notifyDust(75.0f);
 
-    Position allBlocked = {true, true, true};
-    Position stillBlocked = {false, true, true};
-    Position leftClear = {false, false, true};
+    SensorData allBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(allBlocked);
 
-    t.obstacleSensor.notifyFrontObstacle(allBlocked);
-    t.obstacleSensor.notifySideObstacle(stillBlocked);
-    t.obstacleSensor.notifySideObstacle(leftClear);
+    SensorData stillBlocked = {true, true};
+    t.obstacleSensor.notifyObstacle(stillBlocked);
+
+    SensorData leftClear = {false, false};
+    t.obstacleSensor.notifyObstacle(leftClear);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
             t.motor.getStatus() == DriveSetting::FORWARD;
@@ -188,7 +193,7 @@ bool TC_POS_09() {
 
 // ==========================================
 // TC-POS-10
-// UC-00 단일 흐름 
+// UC-00 단일 흐름 (부분 장애물)
 // startCleaning() -> 좌/우 장애물 감지 -> 전방 비어있음 -> 회피 없이 직진 유지
 // SystemState: CLEANING 유지 (AVOIDING 미진입)
 // MotorHandler: FORWARD 유지
@@ -198,8 +203,8 @@ bool TC_POS_10() {
     TestContext t;
     t.rvc.startCleaning();
 
-    Position sideBlocked = {false, true, true};
-    t.obstacleSensor.notifyFrontObstacle(sideBlocked);
+    SensorData frontClear = {true, false};
+    t.obstacleSensor.notifyObstacle(frontClear);
 
     return t.rvc.getSystemState() == SystemState::CLEANING &&
             t.motor.getStatus() == DriveSetting::FORWARD &&
